@@ -1,0 +1,20 @@
+{"id": "g01", "category": "paraphrase", "question": "How must a high-risk AI tool be designed so that staff can supervise it and step in?", "expected": [{"doc_id": "ai_act", "ref": "Article 14"}]}
+{"id": "g02", "category": "direct", "question": "When is an AI system that is a safety component of a medical device classified as high-risk?", "expected": [{"doc_id": "ai_act", "ref": "Article 6"}]}
+{"id": "g03", "category": "paraphrase", "question": "Which uses of artificial intelligence are forbidden in the EU altogether?", "expected": [{"doc_id": "ai_act", "ref": "Article 5"}]}
+{"id": "g04", "category": "paraphrase", "question": "Do I have to tell users that they are chatting with a bot?", "expected": [{"doc_id": "ai_act", "ref": "Article 50"}]}
+{"id": "g05", "category": "direct", "question": "What is the maximum administrative fine for breaching the prohibition of certain AI practices?", "expected": [{"doc_id": "ai_act", "ref": "Article 99"}]}
+{"id": "g06", "category": "paraphrase", "question": "What quality rules apply to the data used to train and test high-risk AI?", "expected": [{"doc_id": "ai_act", "ref": "Article 10"}]}
+{"id": "g07", "category": "direct", "question": "Which conformity assessment route applies to a high-risk AI system?", "expected": [{"doc_id": "ai_act", "ref": "Article 43"}]}
+{"id": "g08", "category": "direct", "question": "How is a medical device defined in the MDR?", "expected": [{"doc_id": "mdr", "ref": "Article 2"}]}
+{"id": "g09", "category": "paraphrase", "question": "In which risk class does software that supports diagnostic or therapeutic decisions fall?", "expected": [{"doc_id": "mdr", "ref": "Annex VIII"}]}
+{"id": "g10", "category": "paraphrase", "question": "What clinical evidence must a manufacturer gather to show that a device is safe and performs as intended?", "expected": [{"doc_id": "mdr", "ref": "Article 61"}]}
+{"id": "g11", "category": "paraphrase", "question": "How quickly must a manufacturer notify the authorities about a serious incident with its device?", "expected": [{"doc_id": "mdr", "ref": "Article 87"}]}
+{"id": "g12", "category": "direct", "question": "How does the IVDR define an in vitro diagnostic medical device?", "expected": [{"doc_id": "ivdr", "ref": "Article 2"}]}
+{"id": "g13", "category": "paraphrase", "question": "Into which risk classes are in vitro diagnostic devices divided?", "expected": [{"doc_id": "ivdr", "ref": "Article 47"}]}
+{"id": "g14", "category": "paraphrase", "question": "Is it allowed to process patients' health data?", "expected": [{"doc_id": "gdpr", "ref": "Article 9"}]}
+{"id": "g15", "category": "paraphrase", "question": "Can a person refuse to be subject to a decision made only by an algorithm?", "expected": [{"doc_id": "gdpr", "ref": "Article 22"}]}
+{"id": "g16", "category": "paraphrase", "question": "When must an organisation assess the data protection risks of a planned processing before starting it?", "expected": [{"doc_id": "gdpr", "ref": "Article 35"}]}
+{"id": "g17", "category": "cross_regulation", "question": "May a provider of a high-risk AI system use sensitive personal data to detect and correct bias?", "expected": [{"doc_id": "ai_act", "ref": "Article 4a"}, {"doc_id": "gdpr", "ref": "Article 9"}]}
+{"id": "g18", "category": "cross_regulation", "question": "A hospital deploys a high-risk AI system on patient data. How do its AI Act deployer duties relate to data protection impact assessments?", "expected": [{"doc_id": "ai_act", "ref": "Article 26"}, {"doc_id": "gdpr", "ref": "Article 35"}]}
+{"id": "g19", "category": "out_of_scope", "question": "How is the premium for car insurance calculated for young drivers?", "expected": []}
+{"id": "g20", "category": "out_of_scope", "question": "What is the speed limit on German motorways?", "expected": []}

@@ -36,6 +36,9 @@ src/regcite/cli.py        `regcite search` command
 src/regcite/ingest/       Download, convert to Markdown, load into chunks
 data/manifest.json        Source, version, date and SHA-256 of each text
 src/regcite/config.py     Settings, including the Claude model ID
+src/regcite/gold.py       Load gold questions, match chunks to expected articles
+eval/gold.jsonl           Gold questions (draft, see eval/README.md)
+docs/decisions/           Architecture decision records
 tests/                    Chunking, search and ingestion tests
 .github/workflows/ci.yml  lint and test jobs on every push
 data/raw/                 Source regulation texts (add your own)
