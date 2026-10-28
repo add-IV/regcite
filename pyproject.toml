@@ -11,7 +11,8 @@ dependencies = []
 
 [project.optional-dependencies]
 dense = ["numpy>=2,<3", "sentence-transformers>=6,<7"]
-dev = ["pytest>=8", "ruff>=0.6", "numpy>=2,<3"]
+api = ["fastapi>=0.115,<1", "uvicorn>=0.30,<1"]
+dev = ["pytest>=8", "ruff>=0.6", "numpy>=2,<3", "fastapi>=0.115,<1", "httpx>=0.27,<1"]
 
 [project.scripts]
 regcite = "regcite.cli:main"

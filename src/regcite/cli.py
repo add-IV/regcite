@@ -35,7 +35,24 @@ def main(argv: list[str] | None = None) -> int:
     evaluate.add_argument("-k", "--top-k", type=int, default=5)
     evaluate.add_argument("--index", type=Path, default=Path("data/index"), help="Vector cache")
 
+    serve = sub.add_parser("serve", help="Run the HTTP API (needs the api extra)")
+    serve.add_argument("--host", default="127.0.0.1")
+    serve.add_argument("--port", type=int, default=8000)
+
     args = parser.parse_args(argv)
+
+    if args.command == "serve":
+        import uvicorn
+
+        # The access log is off so request details are never written anywhere.
+        uvicorn.run(
+            "regcite.api:app_from_env",
+            factory=True,
+            host=args.host,
+            port=args.port,
+            access_log=False,
+        )
+        return 0
 
     if args.command == "ingest":
         for entry in ingest(args.out, args.manifest, refresh=args.refresh):
