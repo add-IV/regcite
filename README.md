@@ -3,9 +3,9 @@
 Retrieval over EU regulation on AI in medicine, with answers that cite the
 exact article they came from and are checked against the retrieved text.
 
-Target corpus: the EU AI Act (2024/1689), MDR (2017/745), IVDR (2017/746),
-the GDPR (2016/679) and MDCG 2019-11 (software qualification). regcite is a research and engineering
-project. It is not legal or clinical advice.
+Target corpus: the EU AI Act (2024/1689), MDR (2017/745), IVDR (2017/746)
+and the GDPR (2016/679). regcite is a research and engineering project. It is
+not legal or clinical advice.
 
 ## Status
 
@@ -45,7 +45,7 @@ CLAUDE.md                 Project guidance for Claude Code
 | Milestone | Goal |
 |-----------|------|
 | M0 | Foundations: ruff, CI, model config, ingestion module |
-| M1 | Corpus: fetch and convert the five sources, manifest with hashes, `regcite ingest`, first gold questions |
+| M1 | Corpus: fetch and convert the four regulations, manifest with hashes, `regcite ingest`, first gold questions |
 | M2 | Retrieval: local embeddings, hybrid ranking with reciprocal rank fusion, optional reranker |
 | M3 | Grounded answers from Claude; every cited ID and quote is verified, otherwise retry once, then abstain |
 | M4 | Evaluation: 60-100 gold questions, recall@5 and MRR with confidence intervals, no-retrieval and long-context baselines, faithfulness review |

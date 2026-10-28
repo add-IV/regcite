@@ -1,6 +1,6 @@
 # regcite
 
-Retrieval over EU regulation on AI in medicine (AI Act, MDR, IVDR, GDPR, MDCG 2019-11) with answers that cite verifiable articles. This is an AI engineering portfolio project. The full roadmap is in the plan: `C:\Users\add-iv\.claude\plans\update-the-plan-virtual-deer.md` (milestones M0–M5).
+Retrieval over EU regulation on AI in medicine (AI Act, MDR, IVDR, GDPR) with answers that cite verifiable articles. This is an AI engineering portfolio project. The full roadmap is in the plan: `C:\Users\add-iv\.claude\plans\update-the-plan-virtual-deer.md` (milestones M0–M5).
 
 ## Commands
 
