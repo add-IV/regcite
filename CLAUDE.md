@@ -7,7 +7,8 @@ Retrieval over EU regulation on AI in medicine (AI Act, MDR, IVDR, GDPR, MDCG 20
 ```powershell
 pip install -e ".[dev]"      # install with dev extras
 python -m pytest             # run tests
-python -m ruff check .       # lint (CI runs both)
+python -m ruff check .       # lint
+python -m ruff format .      # format (CI runs a `lint` job: format --check then check, and a parallel `test` job: pytest)
 regcite search "<query>" --corpus data/raw
 ```
 

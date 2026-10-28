@@ -35,7 +35,7 @@ src/regcite/cli.py        `regcite search` command
 src/regcite/ingest/       Load regulation files into chunks
 src/regcite/config.py     Settings, including the Claude model ID
 tests/                    Chunking, search and ingestion tests
-.github/workflows/ci.yml  ruff and pytest on every push
+.github/workflows/ci.yml  lint and test jobs on every push
 data/raw/                 Source regulation texts (add your own)
 CLAUDE.md                 Project guidance for Claude Code
 ```
