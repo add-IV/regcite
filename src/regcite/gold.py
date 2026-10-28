@@ -37,6 +37,18 @@ def load_gold(path: Path) -> list[Question]:
     return questions
 
 
+_ARTICLE_REF = re.compile(r"(?:Article \d+[a-z]?|Annex [IVXLC]+)(?=\s|$)")
+
+
+def article_key(chunk: Chunk) -> tuple[str, str]:
+    """The (document, article or annex) a chunk belongs to, used to count an article once."""
+    for part in reversed(chunk.citation.split(" > ")):
+        found = _ARTICLE_REF.match(part)
+        if found:
+            return chunk.doc_id, found.group()
+    return chunk.doc_id, chunk.citation
+
+
 def matches(chunk: Chunk, expected: Expected) -> bool:
     """True if the chunk sits under the expected article or annex of the expected document."""
     if chunk.doc_id != expected.doc_id:

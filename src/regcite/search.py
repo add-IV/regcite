@@ -2,7 +2,7 @@
 
 This is a plain-Python baseline with no dependencies. It is good at exact
 legal terms ("high-risk", "Article 14", "510(k)"), which embedding search
-often blurs. Embeddings can be added later and compared against it.
+often blurs. ``HybridIndex`` fuses it with embedding search for comparison.
 """
 
 from __future__ import annotations
@@ -10,6 +10,7 @@ from __future__ import annotations
 import math
 import re
 from collections import Counter
+from typing import Protocol
 
 from regcite.chunking import Chunk
 
@@ -51,3 +52,32 @@ class BM25Index:
 
         ranked = sorted(range(self.n), key=lambda i: scores[i], reverse=True)
         return [(self.chunks[i], scores[i]) for i in ranked[:top_k] if scores[i] > 0]
+
+
+class Ranker(Protocol):
+    def search(self, query: str, top_k: int = 5) -> list[tuple[Chunk, float]]: ...
+
+
+def reciprocal_rank_fusion(
+    rankings: list[list[Chunk]], k: int = 60, top_k: int = 5
+) -> list[tuple[Chunk, float]]:
+    """Merge ranked lists: each chunk scores the sum of 1 / (k + rank) over the lists."""
+    scores: dict[Chunk, float] = {}
+    for ranking in rankings:
+        for rank, chunk in enumerate(ranking, start=1):
+            scores[chunk] = scores.get(chunk, 0.0) + 1.0 / (k + rank)
+    fused = sorted(scores.items(), key=lambda item: item[1], reverse=True)
+    return fused[:top_k]
+
+
+class HybridIndex:
+    """Reciprocal rank fusion of several rankers, for example BM25 and embeddings."""
+
+    def __init__(self, rankers: list[Ranker], k: int = 60, pool: int = 50):
+        self.rankers = rankers
+        self.k = k
+        self.pool = pool
+
+    def search(self, query: str, top_k: int = 5) -> list[tuple[Chunk, float]]:
+        rankings = [[c for c, _ in r.search(query, top_k=self.pool)] for r in self.rankers]
+        return reciprocal_rank_fusion(rankings, k=self.k, top_k=top_k)
