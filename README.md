@@ -9,10 +9,11 @@ not legal or clinical advice.
 
 ## Status
 
-Early work. What exists today: Markdown or plain-text files are split by
-article and heading, and searched with BM25 through a CLI. There is no real
-corpus, no LLM step, no evaluation and no interface yet. No API keys or model
-downloads are needed.
+Early work. What exists today: `regcite ingest` downloads the four
+regulations (consolidated versions, pinned and recorded in
+`data/manifest.json`), converts them to Markdown, and BM25 search over them
+returns article-level citations. There is no LLM step, no evaluation and no
+interface yet. No API keys or model downloads are needed.
 
 ## Quick start
 
@@ -21,7 +22,7 @@ python -m venv .venv
 .venv\Scripts\activate
 pip install -e ".[dev]"
 
-# Put .md or .txt copies of the regulations under data/raw/
+regcite ingest        # downloads about 4 MB into data/raw/ (not tracked by git)
 regcite search "human oversight high-risk" --corpus data/raw
 pytest
 ```
@@ -32,7 +33,8 @@ pytest
 src/regcite/chunking.py   Split documents into citable chunks
 src/regcite/search.py     BM25 keyword index
 src/regcite/cli.py        `regcite search` command
-src/regcite/ingest/       Load regulation files into chunks
+src/regcite/ingest/       Download, convert to Markdown, load into chunks
+data/manifest.json        Source, version, date and SHA-256 of each text
 src/regcite/config.py     Settings, including the Claude model ID
 tests/                    Chunking, search and ingestion tests
 .github/workflows/ci.yml  lint and test jobs on every push
@@ -78,5 +80,18 @@ query and total evaluation cost will be listed. This section is filled in once
 
 ## Sources
 
-Keep a note of the version and date of each text in `data/raw/`. Regulations
-are amended, and a citation is only useful if it points to a known version.
+Texts come from the EU Publications Office as consolidated XHTML (the
+`eur-lex.europa.eu` site blocks scripted requests). Versions are pinned in
+`src/regcite/ingest/sources.py`:
+
+| Regulation | Consolidated version |
+|------------|----------------------|
+| AI Act (2024/1689) | 2026-07-27 |
+| MDR (2017/745) | 2026-07-19 |
+| IVDR (2017/746) | 2025-01-10 |
+| GDPR (2016/679) | 2016-05-04 |
+
+The downloaded texts are not committed. Consolidated texts have no recitals,
+and tables are flattened to one paragraph per cell. Regulations are amended,
+and a citation is only useful if it points to a known version, so
+`data/manifest.json` records the SHA-256 of each source file.

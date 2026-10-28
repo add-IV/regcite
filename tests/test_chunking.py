@@ -28,6 +28,13 @@ def test_citations_follow_heading_hierarchy():
     assert any(c.citation == "Article 14 Transparency" and "Providers" in c.text for c in chunks)
 
 
+def test_cross_reference_line_is_not_a_heading():
+    text = "# Annex XVII\n\nArticle 1(1)\n\nArticle 2(3)\n\nDirective 93/42/EEC."
+    chunks = chunk_document("doc", text)
+    assert {c.citation for c in chunks} == {"Annex XVII"}
+    assert "Article 1(1)" in chunks[0].text
+
+
 def test_sentence_starting_with_article_is_not_a_heading():
     chunks = chunk_document("doc", SAMPLE)
     body_chunk = next(c for c in chunks if "Article 5 requires" in c.text)

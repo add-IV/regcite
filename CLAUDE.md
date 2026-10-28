@@ -9,6 +9,7 @@ pip install -e ".[dev]"      # install with dev extras
 python -m pytest             # run tests
 python -m ruff check .       # lint
 python -m ruff format .      # format (CI runs a `lint` job: format --check then check, and a parallel `test` job: pytest)
+regcite ingest               # download and convert the corpus into data/raw (git-ignored)
 regcite search "<query>" --corpus data/raw
 ```
 
@@ -19,7 +20,7 @@ Windows, PowerShell. Python >= 3.11. Source layout is `src/regcite/`, tests in `
 - `chunking.py`: `chunk_document(doc_id, text, max_chars=1200)` splits Markdown by heading into `Chunk`s; the heading path becomes the citation.
 - `search.py`: `BM25Index` and `tokenize`. This is the lexical baseline; keep its behaviour unchanged when adding hybrid ranking.
 - `cli.py`: `regcite search`.
-- `ingest/`: `load_corpus` reads a folder of .md/.txt files into chunks. Fetching and conversion go here in M1.
+- `ingest/`: `sources.py` pins the four regulations (consolidated CELEX), `fetch.py` downloads XHTML from the Publications Office resolver (eur-lex.europa.eu blocks scripts), `convert.py` turns it into Markdown (chapter/annex `#`, section `##`, article `###`), `pipeline.py` writes `data/raw/*.md` and `data/manifest.json`, `corpus.py` has `load_corpus`.
 - `config.py`: `get_model()` returns the Claude model ID (env `REGCITE_MODEL`, default in `DEFAULT_MODEL`).
 
 ## Conventions

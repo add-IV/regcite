@@ -1,0 +1,48 @@
+{
+  "documents": [
+    {
+      "doc_id": "ai_act",
+      "title": "Artificial Intelligence Act (Regulation (EU) 2024/1689)",
+      "celex": "02024R1689-20260727",
+      "version": "consolidated 2026-07-27",
+      "url": "http://publications.europa.eu/resource/celex/02024R1689-20260727",
+      "retrieved": "2026-10-28",
+      "source_sha256": "5e7719f77e8a606b257dc25958ee3222c4383300a5a34270a5b850a2ce8b8715",
+      "markdown_sha256": "b6a9558562cc61f16c4e95a0dd633dec98654534eca969a8deb9ad1e4eef6f3d",
+      "articles": 119
+    },
+    {
+      "doc_id": "mdr",
+      "title": "Medical Devices Regulation (Regulation (EU) 2017/745)",
+      "celex": "02017R0745-20260719",
+      "version": "consolidated 2026-07-19",
+      "url": "http://publications.europa.eu/resource/celex/02017R0745-20260719",
+      "retrieved": "2026-10-28",
+      "source_sha256": "c43b527fb7a9624fe1ca9fef4442f1c4ac93f40f095fc5db5819591cdc549d7c",
+      "markdown_sha256": "a55d57e4bcd1a3cd896762a5bee43e828709b769965f40dfd014d1200a6c4ff0",
+      "articles": 124
+    },
+    {
+      "doc_id": "ivdr",
+      "title": "In Vitro Diagnostic Regulation (Regulation (EU) 2017/746)",
+      "celex": "02017R0746-20250110",
+      "version": "consolidated 2025-01-10",
+      "url": "http://publications.europa.eu/resource/celex/02017R0746-20250110",
+      "retrieved": "2026-10-28",
+      "source_sha256": "c4809037e16bb6c3d02f1e77bf77aea9cdee866755cb3361b44232b9d3a9d599",
+      "markdown_sha256": "e6a949f1ce4df92f92bf2a83e19b56f501b1cf2bbb21d4d9a8927ea24328b5a8",
+      "articles": 114
+    },
+    {
+      "doc_id": "gdpr",
+      "title": "General Data Protection Regulation (Regulation (EU) 2016/679)",
+      "celex": "02016R0679-20160504",
+      "version": "consolidated 2016-05-04",
+      "url": "http://publications.europa.eu/resource/celex/02016R0679-20160504",
+      "retrieved": "2026-10-28",
+      "source_sha256": "a681ff22f32f125749af6e96947224369efc132edb8a95b12637e357df1056de",
+      "markdown_sha256": "7a23ccef799660a59925c5f47d52b94afc9285541eb4446119ffadf6ea18bf76",
+      "articles": 99
+    }
+  ]
+}

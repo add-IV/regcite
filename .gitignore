@@ -1,3 +1,7 @@
+# Regulation texts are downloaded by `regcite ingest`; the manifest is committed instead
+data/raw/*
+!data/raw/.gitkeep
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

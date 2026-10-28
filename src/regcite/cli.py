@@ -6,7 +6,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from regcite.ingest import load_corpus
+from regcite.ingest import ingest, load_corpus
 from regcite.search import BM25Index
 
 
@@ -19,7 +19,17 @@ def main(argv: list[str] | None = None) -> int:
     search.add_argument("--corpus", type=Path, default=Path("data/raw"))
     search.add_argument("-k", "--top-k", type=int, default=5)
 
+    fetch = sub.add_parser("ingest", help="Download the regulations and write the manifest")
+    fetch.add_argument("--out", type=Path, default=Path("data/raw"))
+    fetch.add_argument("--manifest", type=Path, default=Path("data/manifest.json"))
+    fetch.add_argument("--refresh", action="store_true", help="Download again even if cached")
+
     args = parser.parse_args(argv)
+
+    if args.command == "ingest":
+        for entry in ingest(args.out, args.manifest, refresh=args.refresh):
+            print(f"{entry['doc_id']}: {entry['version']}, {entry['articles']} articles")
+        return 0
 
     if not args.corpus.is_dir():
         print(f"Corpus folder not found: {args.corpus}", file=sys.stderr)

@@ -13,9 +13,10 @@ from dataclasses import dataclass
 MARKDOWN_HEADING = re.compile(r"^(#{1,6})\s+(?P<title>.+?)\s*$")
 # Legal headings such as "Article 14 Transparency" or "Art. 6". Lines that
 # end in a period are treated as body text, so "Article 5 requires ..."
-# inside a paragraph is not mistaken for a heading.
+# inside a paragraph is not mistaken for a heading. A number followed directly
+# by "(" is a cross-reference such as "Article 1(1)", not a heading.
 ARTICLE_HEADING = re.compile(
-    r"^(?P<title>(?:Article|Art\.|Section|Chapter|Annex)\s+[0-9IVXLC]+[A-Za-z]?\b.*?)\s*$"
+    r"^(?P<title>(?:Article|Art\.|Section|Chapter|Annex)\s+[0-9IVXLC]+[A-Za-z]?\b(?!\().*?)\s*$"
 )
 MAX_HEADING_LENGTH = 120
 
