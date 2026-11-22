@@ -5,18 +5,18 @@ Retrieval over EU regulation on AI in medicine (AI Act, MDR, IVDR, GDPR) with an
 ## Commands
 
 ```powershell
-pip install -e ".[dev]"      # install with dev extras
-python -m pytest             # run tests
-python -m ruff check .       # lint
-python -m ruff format .      # format (CI runs a `lint` job: format --check then check, and a parallel `test` job: pytest)
+uv sync                      # create .venv with the dev group (uv.lock is committed; Python pinned in .python-version)
+uv run pytest                # run tests
+uv run ruff check .          # lint
+uv run ruff format .         # format (CI runs a `lint` job: format --check then check, and a parallel `test` job: pytest)
 regcite ingest               # download and convert the corpus into data/raw (git-ignored)
 regcite search "<query>" [--ranker bm25|dense|hybrid]
 regcite eval                 # recall@5 and MRR per ranker on eval/gold.jsonl
-regcite serve                # HTTP API on 127.0.0.1:8000 (pip install -e ".[api,dense]")
-pip install -e ".[dev,dense]"  # embedding search; first dense run downloads a 440 MB model and embeds the corpus (~3 min, cached in data/index/)
+regcite serve                # HTTP API on 127.0.0.1:8000 (uv sync --extra api --extra dense)
+uv sync --extra dense        # embedding search; first dense run downloads a 440 MB model and embeds the corpus (~3 min, cached in data/index/)
 ```
 
-Windows, PowerShell. Python >= 3.11. Source layout is `src/regcite/`, tests in `tests/`.
+Windows, PowerShell. Python >= 3.11, managed with uv. Add dependencies with `uv add` so `uv.lock` stays in sync. Source layout is `src/regcite/`, tests in `tests/`.
 
 ## Architecture
 

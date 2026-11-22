@@ -24,9 +24,8 @@ hybrid are within noise) are in
 ## Quick start
 
 ```powershell
-python -m venv .venv
-.venv\Scripts\activate
-pip install -e ".[dev]"        # add ",dense" for embedding search
+uv sync                        # creates .venv with dev tools; add --extra dense for embedding search
+.venv\Scripts\activate         # or prefix the commands below with `uv run`
 
 regcite ingest                 # downloads about 4 MB into data/raw/ (not tracked by git)
 regcite search "human oversight high-risk"                  # BM25
