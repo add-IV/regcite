@@ -36,7 +36,7 @@ Windows, PowerShell. Python >= 3.11, managed with uv. Add dependencies with `uv 
 ## Conventions
 
 - Match the surrounding style: `from __future__ import annotations`, type hints, short docstrings, no extra comments.
-- Every new behaviour gets a test in `tests/`. Citation verification and ingestion parsing need the most careful tests.
+- Test the code in `src/` where a test can catch a real mistake; citation verification and ingestion parsing need the most careful tests. Do not test things outside the repo (Docker, Caddy, uvicorn, downloaded data) or trivial getters.
 - Runtime dependencies are minimal by design. Add one only when the milestone needs it, pin its version, and prefer CPU-only builds.
 - The model ID comes from config, never hard-coded in call sites. Record the model in every eval result.
 

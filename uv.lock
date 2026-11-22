@@ -931,7 +931,6 @@ dev = [
     { name = "numpy", version = "2.5.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
     { name = "pytest" },
     { name = "ruff" },
-    { name = "uvicorn" },
 ]
 
 [package.metadata]
@@ -952,7 +951,6 @@ dev = [
     { name = "numpy", specifier = ">=2,<3" },
     { name = "pytest", specifier = ">=8" },
     { name = "ruff", specifier = ">=0.6" },
-    { name = "uvicorn", specifier = ">=0.30,<1" },
 ]
 
 [[package]]

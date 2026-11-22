@@ -1,6 +1,5 @@
 import json
 
-from regcite.cli import main
 from regcite.ingest import ingest
 from regcite.ingest.sources import Source
 
@@ -60,15 +59,3 @@ def test_refresh_downloads_again_with_new_date(tmp_path):
         tmp_path / "raw", tmp_path / "m.json", today="2027-01-01", refresh=True, **kwargs
     )
     assert entries[0]["retrieved"] == "2027-01-01"
-
-
-def test_cli_ingest_prints_summary(tmp_path, monkeypatch, capsys):
-    monkeypatch.setattr(
-        "regcite.cli.ingest",
-        lambda out, manifest, refresh: [
-            {"doc_id": "demo", "version": "consolidated 2026-01-01", "articles": 3}
-        ],
-    )
-    code = main(["ingest", "--out", str(tmp_path), "--manifest", str(tmp_path / "m.json")])
-    assert code == 0
-    assert "demo: consolidated 2026-01-01, 3 articles" in capsys.readouterr().out

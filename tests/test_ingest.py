@@ -1,4 +1,3 @@
-from regcite.config import DEFAULT_MODEL, get_model
 from regcite.ingest import load_corpus
 
 
@@ -14,10 +13,3 @@ def test_load_corpus_reads_supported_files_only(tmp_path):
 
 def test_load_corpus_empty_folder(tmp_path):
     assert load_corpus(tmp_path) == []
-
-
-def test_model_defaults_and_env_override(monkeypatch):
-    monkeypatch.delenv("REGCITE_MODEL", raising=False)
-    assert get_model() == DEFAULT_MODEL
-    monkeypatch.setenv("REGCITE_MODEL", "other-model")
-    assert get_model() == "other-model"

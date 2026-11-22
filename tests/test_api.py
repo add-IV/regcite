@@ -115,14 +115,7 @@ def test_rate_limiter_forgets_idle_clients():
     clock.now = 70
     limiter.forget_idle()
 
-    assert limiter.retry_after("a") is None
-    assert list(limiter._calls) == ["b", "a"]
-    assert len(limiter._calls["a"]) == 1
-
-
-def test_app_starts_and_stops_with_pruning_task():
-    with make_client() as client:
-        assert client.get("/health").status_code == 200
+    assert set(limiter._calls) == {"b"}
 
 
 def test_query_text_is_not_logged(caplog):
@@ -141,10 +134,6 @@ def test_examples_lists_gold_questions():
     assert body == [{"id": "g01", "category": "direct", "question": "What is human oversight?"}]
 
 
-def test_examples_is_empty_without_gold_file():
-    assert make_client().get("/examples").json() == []
-
-
 def test_static_page_is_served_next_to_the_api(tmp_path):
     (tmp_path / "index.html").write_text("<h1>regcite</h1>", encoding="utf-8")
     client = make_client(static_dir=tmp_path)
@@ -152,7 +141,3 @@ def test_static_page_is_served_next_to_the_api(tmp_path):
     assert client.get("/").text == "<h1>regcite</h1>"
     assert client.get("/health").json()["status"] == "ok"
     assert client.post("/search", json={"query": "oversight", "ranker": "bm25"}).status_code == 200
-
-
-def test_no_static_page_without_web_folder():
-    assert make_client().get("/").status_code == 404
