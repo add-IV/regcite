@@ -38,6 +38,10 @@ def main(argv: list[str] | None = None) -> int:
     serve = sub.add_parser("serve", help="Run the HTTP API (needs the api extra)")
     serve.add_argument("--host", default="127.0.0.1")
     serve.add_argument("--port", type=int, default=8000)
+    serve.add_argument(
+        "--forwarded-allow-ips",
+        help="Proxy addresses whose X-Forwarded-For is trusted (uvicorn default: 127.0.0.1)",
+    )
 
     args = parser.parse_args(argv)
 
@@ -51,6 +55,7 @@ def main(argv: list[str] | None = None) -> int:
             host=args.host,
             port=args.port,
             access_log=False,
+            forwarded_allow_ips=args.forwarded_allow_ips,
         )
         return 0
 

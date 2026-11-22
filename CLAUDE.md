@@ -26,7 +26,7 @@ Windows, PowerShell. Python >= 3.11, managed with uv. Add dependencies with `uv 
 - `rankers.py`: `build_ranker(name, chunks, cache_dir)`, and `build_rankers(names, ...)`, which shares one BM25 index and one embedding model across rankers (use it whenever several rankers run in one process).
 - `gold.py`, `evaluate.py`: gold questions and per-article recall@k / MRR; `matches` and `article_key` decide which article a chunk belongs to.
 - `api.py`: `create_app(rankers, chunk_count, sources, limiter)` (FastAPI; `POST /search`, `GET /health`) and `app_from_env()` which loads corpus and rankers once and warms them up. The query goes in the POST body, never the URL, and `regcite serve` runs uvicorn with the access log off: do not add logging of query text or IPs. `RateLimiter` keeps client IPs in memory only.
-- `cli.py`: `regcite ingest | search | eval | serve`.
+- `cli.py`: `regcite ingest | search | eval | serve`; `serve --forwarded-allow-ips` sets which proxy may supply `X-Forwarded-For`.
 - `ingest/`: `sources.py` pins the four regulations (consolidated CELEX), `fetch.py` downloads XHTML from the Publications Office resolver (eur-lex.europa.eu blocks scripts), `convert.py` turns it into Markdown (chapter/annex `#`, section `##`, article `###`), `pipeline.py` writes `data/raw/*.md` and `data/manifest.json`, `corpus.py` has `load_corpus`.
 - `config.py`: `get_model()` returns the Claude model ID (env `REGCITE_MODEL`); `get_embedding_model()` the embedding model (env `REGCITE_EMBEDDING_MODEL`).
 
