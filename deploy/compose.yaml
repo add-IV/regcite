@@ -1,0 +1,25 @@
+# Run from the repo root: docker compose -f deploy/compose.yaml up -d --build
+# First start: docker compose -f deploy/compose.yaml run --rm regcite regcite ingest
+services:
+  regcite:
+    build: ..
+    image: regcite:latest
+    restart: unless-stopped
+    # Host network so Caddy reaches the app on 127.0.0.1:8000 and the client IP in
+    # X-Forwarded-For is trusted from 127.0.0.1 only. The app binds to loopback, not 0.0.0.0.
+    network_mode: host
+    volumes:
+      - regcite-data:/app/data
+    environment:
+      OMP_NUM_THREADS: "4"
+    mem_limit: 4g
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+volumes:
+  regcite-data:

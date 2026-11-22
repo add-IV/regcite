@@ -1,0 +1,22 @@
+# Site block for the host's Caddy. Replace the domain. No `log` directive: Caddy then
+# writes no access log, so client IPs and request paths never reach disk.
+regcite.example.com {
+	encode zstd gzip
+
+	request_body {
+		max_size 16KB
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "no-referrer"
+		Permissions-Policy "interest-cohort=(), camera=(), microphone=(), geolocation=()"
+		Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'"
+		-Server
+	}
+
+	# The app serves web/ and the API on one origin; Caddy replaces any client-sent
+	# X-Forwarded-For with the real peer address.
+	reverse_proxy 127.0.0.1:8000
+}

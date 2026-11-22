@@ -13,6 +13,7 @@ regcite ingest               # download and convert the corpus into data/raw (gi
 regcite search "<query>" [--ranker bm25|dense|hybrid]
 regcite eval                 # recall@5 and MRR per ranker on eval/gold.jsonl
 regcite serve                # HTTP API on 127.0.0.1:8000 (uv sync --extra api --extra dense)
+docker compose -f deploy/compose.yaml up -d --build   # deploy (Linux host); run `regcite ingest` in it once first
 uv sync --extra dense        # embedding search; first dense run downloads a 440 MB model and embeds the corpus (~3 min, cached in data/index/)
 ```
 
@@ -28,6 +29,7 @@ Windows, PowerShell. Python >= 3.11, managed with uv. Add dependencies with `uv 
 - `api.py`: `create_app(rankers, chunk_count, sources, limiter, examples, static_dir)` (FastAPI; `POST /search`, `GET /health`, `GET /examples` with the gold questions, and the static page from `web/` mounted at `/`) and `app_from_env()` which loads corpus and rankers once and warms them up. The query goes in the POST body, never the URL, and `regcite serve` runs uvicorn with the access log off: do not add logging of query text or IPs. `RateLimiter` keeps client IPs in memory only.
 - `cli.py`: `regcite ingest | search | eval | serve`; `serve --forwarded-allow-ips` sets which proxy may supply `X-Forwarded-For`.
 - `web/`: the static page (plain HTML, CSS, JS, no build step). Render server text with `textContent`, never `innerHTML`, and never put the query in the URL.
+- `Dockerfile`, `deploy/`: CPU-only image (torch comes from the PyTorch CPU index on Linux via `[tool.uv.sources]`), `compose.yaml` (host network, app on `127.0.0.1:8000`, data volume), and the Caddy site block. Keep Caddy without a `log` directive and keep the CSP strict (no inline scripts or styles in `web/`).
 - `ingest/`: `sources.py` pins the four regulations (consolidated CELEX), `fetch.py` downloads XHTML from the Publications Office resolver (eur-lex.europa.eu blocks scripts), `convert.py` turns it into Markdown (chapter/annex `#`, section `##`, article `###`), `pipeline.py` writes `data/raw/*.md` and `data/manifest.json`, `corpus.py` has `load_corpus`.
 - `config.py`: `get_model()` returns the Claude model ID (env `REGCITE_MODEL`); `get_embedding_model()` the embedding model (env `REGCITE_EMBEDDING_MODEL`).
 

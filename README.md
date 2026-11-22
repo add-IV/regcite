@@ -55,6 +55,23 @@ extra is missing), and `GET /examples` the gold questions. The page at `/`
 minute per client. The query goes in the request body, not the URL, and the
 server keeps no access log, so query text is not recorded.
 
+## Deploy
+
+The demo runs in Docker (CPU-only torch) behind Caddy on a Linux host.
+
+```sh
+docker compose -f deploy/compose.yaml build
+docker compose -f deploy/compose.yaml run --rm regcite regcite ingest   # once, into the data volume
+docker compose -f deploy/compose.yaml up -d   # first start embeds the corpus (a few minutes)
+```
+
+The container uses the host network and binds to `127.0.0.1:8000`, so only the
+host's Caddy can reach it and only Caddy's `X-Forwarded-For` is trusted. Add
+`deploy/Caddyfile` to the Caddy config with the real domain; it sets HTTPS,
+security headers and a CSP, and has no `log` directive, so no access log is
+written. Corpus, vector cache and embedding model persist in the
+`regcite-data` volume.
+
 ## Layout
 
 ```
@@ -63,7 +80,9 @@ src/regcite/search.py     BM25 index, rank fusion, hybrid index
 src/regcite/dense.py      Local embeddings and cached vector index
 src/regcite/rankers.py    Build a ranker by name (bm25, dense, hybrid)
 src/regcite/evaluate.py   Retrieval metrics, scored per article
-src/regcite/api.py        FastAPI service: POST /search, GET /health, rate limit
+src/regcite/api.py        FastAPI service: POST /search, GET /health, GET /examples, rate limit
+web/                      Static page comparing the rankers side by side
+Dockerfile, deploy/       CPU-only image, compose file and Caddy site block
 src/regcite/cli.py        `regcite ingest | search | eval | serve` commands
 src/regcite/ingest/       Download, convert to Markdown, load into chunks
 data/manifest.json        Source, version, date and SHA-256 of each text
