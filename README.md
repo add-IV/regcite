@@ -40,8 +40,8 @@ caches the vectors in `data/index/`.
 ## API
 
 ```powershell
-pip install -e ".[api,dense]"
-regcite serve                  # http://127.0.0.1:8000, loads the corpus and models at startup
+uv sync --extra api --extra dense
+regcite serve                  # http://127.0.0.1:8000: web page and API, loads the corpus and models at startup
 
 curl -X POST http://127.0.0.1:8000/search -H "Content-Type: application/json" `
   -d '{"query": "human oversight of high-risk AI", "ranker": "hybrid", "k": 5}'
@@ -50,7 +50,8 @@ curl -X POST http://127.0.0.1:8000/search -H "Content-Type: application/json" `
 `POST /search` returns the top chunks with rank, score, document, article,
 citation path, text, and the source version and retrieval date from the
 manifest. `GET /health` lists the available rankers (BM25 only if the `dense`
-extra is missing). Queries are limited to 500 characters and 30 requests per
+extra is missing), and `GET /examples` the gold questions. The page at `/`
+(from `web/`) compares BM25, dense and hybrid results side by side. Queries are limited to 500 characters and 30 requests per
 minute per client. The query goes in the request body, not the URL, and the
 server keeps no access log, so query text is not recorded.
 

@@ -3,7 +3,7 @@ import logging
 import pytest
 from fastapi.testclient import TestClient
 
-from regcite.api import MAX_QUERY_CHARS, RateLimiter, create_app
+from regcite.api import MAX_QUERY_CHARS, Example, RateLimiter, create_app
 from regcite.chunking import Chunk
 from regcite.search import BM25Index
 
@@ -24,9 +24,9 @@ class Clock:
         return self.now
 
 
-def make_client(limiter=None, rankers=None):
+def make_client(limiter=None, rankers=None, **kwargs):
     rankers = rankers if rankers is not None else {"bm25": BM25Index(CHUNKS)}
-    app = create_app(rankers, len(CHUNKS), SOURCES, limiter)
+    app = create_app(rankers, len(CHUNKS), SOURCES, limiter, **kwargs)
     return TestClient(app)
 
 
@@ -105,9 +105,54 @@ def test_rate_limiter_counts_clients_separately():
     assert limiter.retry_after("a") is not None
 
 
+def test_rate_limiter_forgets_idle_clients():
+    clock = Clock()
+    limiter = RateLimiter(limit=5, window=60, clock=clock)
+    limiter.retry_after("a")
+    clock.now = 30
+    limiter.retry_after("b")
+
+    clock.now = 70
+    limiter.forget_idle()
+
+    assert limiter.retry_after("a") is None
+    assert list(limiter._calls) == ["b", "a"]
+    assert len(limiter._calls["a"]) == 1
+
+
+def test_app_starts_and_stops_with_pruning_task():
+    with make_client() as client:
+        assert client.get("/health").status_code == 200
+
+
 def test_query_text_is_not_logged(caplog):
     secret = "patient-jane-doe-diabetes"
     with caplog.at_level(logging.DEBUG):
         make_client().post("/search", json={"query": secret, "ranker": "bm25"})
 
     assert secret not in caplog.text
+
+
+def test_examples_lists_gold_questions():
+    examples = [Example(id="g01", category="direct", question="What is human oversight?")]
+
+    body = make_client(examples=examples).get("/examples").json()
+
+    assert body == [{"id": "g01", "category": "direct", "question": "What is human oversight?"}]
+
+
+def test_examples_is_empty_without_gold_file():
+    assert make_client().get("/examples").json() == []
+
+
+def test_static_page_is_served_next_to_the_api(tmp_path):
+    (tmp_path / "index.html").write_text("<h1>regcite</h1>", encoding="utf-8")
+    client = make_client(static_dir=tmp_path)
+
+    assert client.get("/").text == "<h1>regcite</h1>"
+    assert client.get("/health").json()["status"] == "ok"
+    assert client.post("/search", json={"query": "oversight", "ranker": "bm25"}).status_code == 200
+
+
+def test_no_static_page_without_web_folder():
+    assert make_client().get("/").status_code == 404

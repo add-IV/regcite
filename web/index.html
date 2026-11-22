@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>regcite</title>
+  <meta name="description" content="Search EU regulation on AI in medicine (AI Act, MDR, IVDR, GDPR) and compare retrieval methods side by side.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <h1>regcite</h1>
+      <p class="tagline">Search EU regulation on AI in medicine: AI Act, MDR, IVDR and GDPR. Every result cites its article.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- Notice text: edit freely. Replace the two link targets before deploying. -->
+    <aside class="notice" aria-label="Notice">
+      <p><strong>Not legal or clinical advice.</strong> Do not enter personal or patient data.
+        Search runs on this server in Germany. Questions are not logged or stored;
+        IP addresses are held in memory only, for rate limiting.</p>
+      <p class="notice-links">
+        <a href="https://example.com/privacy" data-link="privacy">Privacy notice</a>
+        <a href="https://example.com/impressum" data-link="impressum">Impressum</a>
+      </p>
+    </aside>
+
+    <form id="search-form" class="search" method="post" autocomplete="off">
+      <label for="query" class="visually-hidden">Question</label>
+      <textarea id="query" name="query" rows="2" maxlength="500" required
+        placeholder="e.g. Who may refuse a decision made only by an algorithm?"></textarea>
+      <div class="search-controls">
+        <label for="ranker">Ranker</label>
+        <select id="ranker" name="ranker">
+          <option value="compare">Compare all</option>
+          <option value="bm25">BM25</option>
+          <option value="dense">Dense</option>
+          <option value="hybrid">Hybrid</option>
+        </select>
+        <span id="char-count" class="char-count" aria-live="polite">0 / 500</span>
+        <button type="submit" id="submit">Search</button>
+      </div>
+    </form>
+
+    <section class="examples" aria-labelledby="examples-heading">
+      <h2 id="examples-heading">Example questions</h2>
+      <ul id="examples" class="example-list"></ul>
+    </section>
+
+    <!-- Answer panel, filled in M3. -->
+    <section id="answer" class="answer" hidden aria-live="polite"></section>
+
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+    <section id="results" class="results" aria-label="Results"></section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>Consolidated texts from the Publications Office of the European Union; each result shows its version.
+        Only the official texts in the Official Journal are authentic.</p>
+      <p id="corpus-info"></p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
