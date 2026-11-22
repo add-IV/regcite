@@ -23,7 +23,7 @@ Windows, PowerShell. Python >= 3.11, managed with uv. Add dependencies with `uv 
 - `chunking.py`: `chunk_document(doc_id, text, max_chars=1200)` splits Markdown by heading into `Chunk`s; the heading path becomes the citation.
 - `search.py`: `BM25Index` and `tokenize` (the lexical baseline; keep its behaviour unchanged), plus `reciprocal_rank_fusion` and `HybridIndex`. Every ranker exposes `search(query, top_k) -> [(Chunk, score)]`.
 - `dense.py`: `SentenceTransformerEmbedder` (bge-base-en-v1.5, local) and `DenseIndex`, whose vectors are cached in `data/index/` keyed by model and chunk texts. Imports numpy, so import it lazily where BM25-only use must work.
-- `rankers.py`: `build_ranker(name, chunks, cache_dir)`.
+- `rankers.py`: `build_ranker(name, chunks, cache_dir)`, and `build_rankers(names, ...)`, which shares one BM25 index and one embedding model across rankers (use it whenever several rankers run in one process).
 - `gold.py`, `evaluate.py`: gold questions and per-article recall@k / MRR; `matches` and `article_key` decide which article a chunk belongs to.
 - `api.py`: `create_app(rankers, chunk_count, sources, limiter)` (FastAPI; `POST /search`, `GET /health`) and `app_from_env()` which loads corpus and rankers once and warms them up. The query goes in the POST body, never the URL, and `regcite serve` runs uvicorn with the access log off: do not add logging of query text or IPs. `RateLimiter` keeps client IPs in memory only.
 - `cli.py`: `regcite ingest | search | eval | serve`.

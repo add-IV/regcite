@@ -100,3 +100,30 @@ def test_hybrid_finds_what_only_the_dense_side_can():
 
     assert bm25.search("fines") == []  # no shared word
     assert hybrid.search("fines", top_k=1)[0][0].citation == "Article 99"
+
+
+def test_build_rankers_shares_one_embedding_model(monkeypatch, tmp_path):
+    import regcite.dense
+    from regcite.rankers import build_rankers
+
+    created = []
+
+    def make_embedder(name):
+        created.append(FakeEmbedder())
+        return created[-1]
+
+    monkeypatch.setattr(regcite.dense, "SentenceTransformerEmbedder", make_embedder)
+
+    rankers = build_rankers(["bm25", "dense", "hybrid"], CHUNKS, tmp_path)
+
+    assert list(rankers) == ["bm25", "dense", "hybrid"]
+    assert len(created) == 1
+    assert created[0].document_calls == 1
+    assert rankers["hybrid"].search("human oversight", top_k=1)[0][0] is CHUNKS[0]
+
+
+def test_build_rankers_rejects_unknown_names(tmp_path):
+    from regcite.rankers import build_rankers
+
+    with pytest.raises(ValueError, match="magic"):
+        build_rankers(["bm25", "magic"], CHUNKS, tmp_path)

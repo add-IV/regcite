@@ -9,7 +9,7 @@ from pathlib import Path
 from regcite.evaluate import evaluate_retrieval, summarise
 from regcite.gold import load_gold
 from regcite.ingest import ingest, load_corpus
-from regcite.rankers import RANKERS, build_ranker
+from regcite.rankers import RANKERS, build_ranker, build_rankers
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -86,8 +86,7 @@ def main(argv: list[str] | None = None) -> int:
 def _run_eval(args, chunks) -> int:
     questions = load_gold(args.gold)
     print(f"{'ranker':<8} {'group':<17} {'n':>3} {f'recall@{args.top_k}':>9} {'MRR':>6}")
-    for name in args.rankers:
-        ranker = build_ranker(name, chunks, args.index)
+    for name, ranker in build_rankers(args.rankers, chunks, args.index).items():
         results = evaluate_retrieval(ranker, questions, k=args.top_k)
         for group, stats in summarise(results).items():
             recall, mrr = stats["recall"], stats["mrr"]

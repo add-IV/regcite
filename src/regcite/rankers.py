@@ -14,15 +14,29 @@ RANKERS = ("bm25", "dense", "hybrid")
 def build_ranker(
     name: str, chunks: list[Chunk], cache_dir: Path | None = Path("data/index")
 ) -> Ranker:
-    if name == "bm25":
-        return BM25Index(chunks)
-    if name not in RANKERS:
-        raise ValueError(f"unknown ranker {name!r}; choose from {', '.join(RANKERS)}")
+    return build_rankers([name], chunks, cache_dir)[name]
 
-    # Imported here so BM25 search works without numpy or a model download.
-    from regcite.dense import DenseIndex, SentenceTransformerEmbedder
 
-    dense = DenseIndex.build(chunks, SentenceTransformerEmbedder(get_embedding_model()), cache_dir)
-    if name == "dense":
-        return dense
-    return HybridIndex([BM25Index(chunks), dense])
+def build_rankers(
+    names: list[str], chunks: list[Chunk], cache_dir: Path | None = Path("data/index")
+) -> dict[str, Ranker]:
+    """Build several rankers that share one BM25 index and one embedding model."""
+    unknown = [n for n in names if n not in RANKERS]
+    if unknown:
+        raise ValueError(f"unknown ranker {unknown[0]!r}; choose from {', '.join(RANKERS)}")
+
+    bm25 = BM25Index(chunks)
+    rankers: dict[str, Ranker] = {}
+    if "bm25" in names:
+        rankers["bm25"] = bm25
+    if "dense" in names or "hybrid" in names:
+        # Imported here so BM25 search works without numpy or a model download.
+        from regcite.dense import DenseIndex, SentenceTransformerEmbedder
+
+        embedder = SentenceTransformerEmbedder(get_embedding_model())
+        dense = DenseIndex.build(chunks, embedder, cache_dir)
+        if "dense" in names:
+            rankers["dense"] = dense
+        if "hybrid" in names:
+            rankers["hybrid"] = HybridIndex([bm25, dense])
+    return {name: rankers[name] for name in names}
