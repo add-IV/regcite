@@ -65,7 +65,7 @@ docker compose -f deploy/compose.yaml run --rm regcite regcite ingest   # once, 
 docker compose -f deploy/compose.yaml up -d   # first start embeds the corpus (a few minutes)
 ```
 
-The container uses the host network and binds to `127.0.0.1:8000`, so only the
+The container uses the host network and binds to `127.0.0.1:8700`, so only the
 host's Caddy can reach it and only Caddy's `X-Forwarded-For` is trusted. Add
 `deploy/Caddyfile` to the Caddy config with the real domain; it sets HTTPS,
 security headers and a CSP, and has no `log` directive, so no access log is

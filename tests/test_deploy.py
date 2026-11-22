@@ -6,17 +6,29 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_caddy_writes_no_access_log():
+def caddy_directives() -> list[str]:
     caddyfile = (ROOT / "deploy" / "Caddyfile").read_text(encoding="utf-8")
-    directives = [line.split("#")[0].strip() for line in caddyfile.splitlines()]
+    return [line.split("#")[0].strip() for line in caddyfile.splitlines()]
 
-    assert not [d for d in directives if d.split(" ")[:1] == ["log"]]
-    assert "reverse_proxy 127.0.0.1:8000" in directives
+
+def container_cmd() -> list[str]:
+    dockerfile = (ROOT / "Dockerfile").read_text(encoding="utf-8")
+    return json.loads(re.search(r"^CMD (\[.*\])$", dockerfile, re.M).group(1))
+
+
+def test_caddy_writes_no_access_log():
+    assert not [d for d in caddy_directives() if d.split(" ")[:1] == ["log"]]
+
+
+def test_caddy_proxies_to_the_container_port():
+    cmd = container_cmd()
+    port = cmd[cmd.index("--port") + 1]
+
+    assert f"reverse_proxy 127.0.0.1:{port}" in caddy_directives()
 
 
 def test_container_binds_loopback_and_trusts_only_local_proxy():
-    dockerfile = (ROOT / "Dockerfile").read_text(encoding="utf-8")
-    cmd = json.loads(re.search(r"^CMD (\[.*\])$", dockerfile, re.M).group(1))
+    cmd = container_cmd()
 
     assert cmd[cmd.index("--host") + 1] == "127.0.0.1"
     assert cmd[cmd.index("--forwarded-allow-ips") + 1] == "127.0.0.1"

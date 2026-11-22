@@ -26,8 +26,8 @@ ENV PATH="/app/.venv/bin:$PATH" \
     XDG_CACHE_HOME=/tmp/cache
 USER regcite
 VOLUME /app/data
-EXPOSE 8000
+EXPOSE 8700
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10m \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4)"
-# Caddy on the host proxies to 127.0.0.1:8000, so only it may set X-Forwarded-For.
-CMD ["regcite", "serve", "--host", "127.0.0.1", "--port", "8000", "--forwarded-allow-ips", "127.0.0.1"]
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8700/health', timeout=4)"
+# Caddy on the host proxies to 127.0.0.1:8700, so only it may set X-Forwarded-For.
+CMD ["regcite", "serve", "--host", "127.0.0.1", "--port", "8700", "--forwarded-allow-ips", "127.0.0.1"]

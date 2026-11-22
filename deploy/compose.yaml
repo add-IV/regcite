@@ -5,7 +5,7 @@ services:
     build: ..
     image: regcite:latest
     restart: unless-stopped
-    # Host network so Caddy reaches the app on 127.0.0.1:8000 and the client IP in
+    # Host network so Caddy reaches the app on 127.0.0.1:8700 and the client IP in
     # X-Forwarded-For is trusted from 127.0.0.1 only. The app binds to loopback, not 0.0.0.0.
     network_mode: host
     volumes:

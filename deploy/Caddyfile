@@ -18,5 +18,5 @@ regcite.example.com {
 
 	# The app serves web/ and the API on one origin; Caddy replaces any client-sent
 	# X-Forwarded-For with the real peer address.
-	reverse_proxy 127.0.0.1:8000
+	reverse_proxy 127.0.0.1:8700
 }
